@@ -1,40 +1,94 @@
 {% load static %}
 
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Login</title>
-    
-    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<link rel="icon" type="image/png" href="https://colorlib.com/etc/lf/Login_v15/images/icons/favicon.ico"/>
 
-		<link rel="stylesheet" type="text/css" href="{% static 'css/login/style.css' %}">
-  </head>
-  <body>
-    <div class="container">
-      <form action="#">
-        <div class="title">Login</div>
-        <div class="input-box underline">
-          <input type="text" placeholder="Enter Your Email" required />
-          <div class="underline"></div>
-        </div>
-        <div class="input-box">
-          <input type="password" placeholder="Enter Your Password" required />
-          <div class="underline"></div>
-        </div>
-        <div class="input-box button">
-          <input type="submit" name="" value="Continue" />
-        </div>
-      </form>
-      {% comment %} <div class="option">or Connect With Social Media</div>
-      <div class="twitter">
-        <a href="#"><i class="fab fa-twitter"></i>Sign in With Twitter</a>
-      </div>
-      <div class="facebook">
-        <a href="#"><i class="fab fa-facebook-f"></i>Sign in With Facebook</a>
-      </div> {% endcomment %}
-    </div>
-  </body>
+<html lang="en">
+
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+        <title>Login</title>
+
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+        <meta name="title" content="Login" />
+        
+        <link rel="icon" type="image/png" href="https://colorlib.com/etc/lf/Login_v15/images/icons/favicon.ico"/>
+        <link type="text/css" rel="stylesheet" href="{% static 'css/login2/all.min.css' %}"/>
+        <link type="text/css" rel="stylesheet" href="{% static 'css/login2/pixel.css' %}"/>
+
+    </head>
+
+    <body cz-shortcut-listen="true">
+        <main>
+            <section class="min-vh-100 d-flex align-items-center section-image overlay-soft-dark" data-background="https://appsrv1-147a1.kxcdn.com/pixel-lite-v400/img/pages/form-image.jpg" style="background: url('https://appsrv1-147a1.kxcdn.com/pixel-lite-v400/img/pages/form-image.jpg');">
+                <div class="container">
+                    <div class="row justify-content-center">
+                        <div class="col-12 d-flex align-items-center justify-content-center">
+                            <div class="signin-inner my-4 my-lg-0 bg-white shadow-soft border rounded border-gray-300 p-4 p-lg-5 w-100 fmxw-500">
+                            
+                                <div class="text-center text-md-center mb-4 mt-md-0">
+                                    <h1 class="mb-0 h3">
+                                        Login
+                                    </h1>
+                                </div>
+
+                                <form method="post" action="#" class="mt-4">
+
+                                    <input
+                                    type="hidden"
+                                    name="csrfmiddlewaretoken"
+                                    value="uuDd3zPKyTpn34hVWiuFGXIyg2RG6hk1Gqqia7tDYa5S4tMnypDR74i134y4cWI5"
+                                    />
+
+                                    <div class="form-group mb-4">
+                                        <label for="email">Usuario</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text" id="basic-addon1"><span class="fas fa-user"></span></span>
+                                            <input
+                                                type="text"
+                                                name="username"
+                                                placeholder="Username"
+                                                class="form-control"
+                                                value="test"
+                                                required=""
+                                                id="id_username"
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="form-group mb-4">
+                                            <label for="password">Contraseña</label>
+                                            <div class="input-group">
+                                                <span class="input-group-text" id="basic-addon2"><span class="fas fa-unlock-alt"></span></span>
+                                                <input
+                                                    type="password"
+                                                    name="password"
+                                                    placeholder="Password"
+                                                    class="form-control"
+                                                    value="ApS12_ZZs8"
+                                                    required=""
+                                                    id="id_password"
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="d-grid">
+                                        <button type="submit" name="login" class="btn btn-primary">
+                                            Logueo
+                                        </button>
+                                    </div>
+
+                                </form>
+
+                                <br />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </body>
+
 </html>
