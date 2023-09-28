@@ -1,0 +1,90 @@
+{% extends './base.html' %}
+
+{% block content %}
+
+    {% load static %}
+    <!-- FORMULARIO ANÁLISIS DE IMAGEN -->
+    <div class="container-xl px-4 mt-n10">
+        <div class="row">
+            <div class="col-xxl-12 col-xl-12 mb-12">
+                <div class="card h-100">
+                    <div class="card-body h-100 p-5">
+                        <div class="row align-items-center">
+                            <div class="col-xl-8 col-xxl-12">
+                                
+                                
+                                <!-- GRÁFICO -->
+                                <div class="text-center text-xl-start text-xxl-center mb-4 mb-xl-0 mb-xxl-4">
+                                    
+                                    <h1 class="text-primary">Resultado del análisis!</h1>
+                                    <div class="card-body">
+                                        <div class="chart-pie">
+                                            <!-- GRÁFICO DEL RESULTADO -->
+                                            <div class="chartjs-size-monitor">
+                                                <div class="chartjs-size-monitor-expand">
+                                                    <div class=""></div>
+                                                </div>
+                                                <div class="chartjs-size-monitor-shrink">
+                                                    <div class=""></div>
+                                                </div>
+                                            </div>
+                                        
+                                            <canvas id="myPieChart" width="639" height="240" style="display: block; width: 639px; height: 240px;" class="chartjs-render-monitor"></canvas>
+                                        
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- LEYENDA -->
+                                <div class="timeline timeline-xs">
+                                    <!-- Con Cáncer -->
+                                    <div class="timeline-item">
+                                        <div class="timeline-item-marker">
+                                            <div class="timeline-item-marker-text">%</div>
+                                            <div class="timeline-item-marker-indicator bg-red"></div>
+                                        </div>
+                                        <div class="timeline-item-content">
+                                            <div class="fw-bold text-dark" href="#!">Con Cáncer</div>
+                                        </div>
+                                    </div>
+                                    <!-- Sin Cáncer -->
+                                    <div class="timeline-item">
+                                        <div class="timeline-item-marker">
+                                            <div class="timeline-item-marker-text">%</div>
+                                            <div class="timeline-item-marker-indicator bg-blue"></div>
+                                        </div>
+                                        <div class="timeline-item-content">
+                                            <div class="fw-bold text-dark" href="#!">Sin Cáncer</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <div style="margin-top: 30px" class="card-footer small text-muted">
+                                        Título: Análisis 1 </br>
+                                        Descripción: Análisis de 5 imágenes de prueba </br></br>
+                                        Nombre de la imagen: 17B0035225_Block_Region_12_24_2_xini_16789_yini_24474.jpg</br>
+                                        Tiempo de análisis: 10seg</br>
+                                        Porcentaje con cáncer: 5%</br>
+                                        Porcentaje sin cáncer: 95%</br>
+                                        Predicción: El paciente no tiene cáncer de próstata</br>
+                                    </div>
+                                    <br>
+                                    
+                                    <!-- IMAGEN DEL PACIENTE -->
+                                    <div>
+                                        <img src="{% static 'img/17B0035225_Block_Region_12_24_2_xini_16789_yini_24474.jpg' %}" width="150px" height="120px"/>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock content %}
+
+

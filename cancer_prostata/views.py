@@ -9,3 +9,6 @@ def analisis_imagen(request):
 
 def resultado_imagen(request):
     return render(request, "resultado_imagen.html", {})
+
+def resultado_imagen_top(request):
+    return render(request, "resultado_imagen_top.html", {})
