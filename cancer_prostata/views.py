@@ -8,7 +8,8 @@ def analisis_imagen(request):
     return render(request, "analisis_imagen.html", {})
 
 def resultado_imagen(request):
-    return render(request, "resultado_imagen.html", {})
-
-def resultado_imagen_top(request):
-    return render(request, "resultado_imagen_top.html", {})
+        
+    titulo = request.POST["titulo"];
+    descripcion = request.POST["descripcion"];
+    
+    return render(request, "resultado_imagen.html", {"titulo": titulo, "descripcion": descripcion})

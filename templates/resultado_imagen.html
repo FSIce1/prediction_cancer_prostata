@@ -1,5 +1,9 @@
 {% extends './base.html' %}
 
+{% block title %}
+    Resultado de la imagen
+{% endblock title %}
+
 {% block content %}
 
     {% load static %}
@@ -61,8 +65,8 @@
 
                                 <div>
                                     <div style="margin-top: 30px" class="card-footer small text-muted">
-                                        Título: Análisis 1 </br>
-                                        Descripción: Análisis de 5 imágenes de prueba </br></br>
+                                        Título: {{titulo}} </br>
+                                        Descripción: {{descripcion}} </br></br>
                                         Nombre de la imagen: 17B0035225_Block_Region_12_24_2_xini_16789_yini_24474.jpg</br>
                                         Tiempo de análisis: 10seg</br>
                                         Porcentaje con cáncer: 5%</br>
@@ -70,7 +74,7 @@
                                         Predicción: El paciente no tiene cáncer de próstata</br>
                                     </div>
                                     <br>
-                                    
+
                                     <!-- IMAGEN DEL PACIENTE -->
                                     <div>
                                         <img src="{% static 'img/17B0035225_Block_Region_12_24_2_xini_16789_yini_24474.jpg' %}" width="150px" height="120px"/>

@@ -3,47 +3,48 @@
 <!DOCTYPE html>
 
 <html lang="en" class="fontawesome-i2svg-active fontawesome-i2svg-complete">
-  <head>
+    <head>
+        
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        
+        <link rel="icon" type="image/x-icon" href="https://sb-admin-pro.startbootstrap.com/assets/img/favicon.png" />
+
+        <title>{% block title %}{% endblock title %}</title>
+
+        {% include "assets/analisis_imagen/css.html" %}
+
+    </head>
     
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <meta name="description" content="" />
-    <meta name="author" content="" />
+    <body class="nav-fixed" cz-shortcut-listen="true">
+        
+        {% include "assets/layouts/navbar.html" %}
+
+        <div id="layoutSidenav">
+
+        {% include "assets/layouts/menu.html" %}
     
-    <link rel="icon" type="image/x-icon" href="https://sb-admin-pro.startbootstrap.com/assets/img/favicon.png" />
-    <title>Análisis de imagen</title>
+        <div id="layoutSidenav_content">
+            
+            <main>
 
-    {% include "assets/analisis_imagen/css.html" %}
+                <!-- CABECERA ANÁLISIS DE IMAGEN -->
+                {% include "assets/cabecera.html" %}
+                
+                {% block content %} {% endblock content %}
 
-  </head>
+            </main>
 
-  <body class="nav-fixed" cz-shortcut-listen="true">
-    
-    {% include "assets/layouts/navbar.html" %}
+            {% include "assets/layouts/footer.html" %}
 
-    <div id="layoutSidenav">
+        </div>
 
-      {% include "assets/layouts/menu.html" %}
- 
-      <div id="layoutSidenav_content">
-          
-          <main>
+        </div>
 
-            <!-- CABECERA ANÁLISIS DE IMAGEN -->
-            {% include "assets/cabecera.html" %}
-              
-            {% block content %} {% endblock content %}
+        {% include "assets/analisis_imagen/scripts.html" %}
 
-          </main>
-
-          {% include "assets/layouts/footer.html" %}
-
-      </div>
-
-    </div>
-
-    {% include "assets/analisis_imagen/scripts.html" %}
-
-  </body>
+    </body>
 </html>

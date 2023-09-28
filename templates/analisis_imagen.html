@@ -1,5 +1,9 @@
 {% extends './base.html' %}
 
+{% block title %}
+    Análisis de la imagen
+{% endblock title %}
+
 {% block content %}
 
   <!-- FORMULARIO ANÁLISIS DE IMAGEN -->
@@ -13,13 +17,16 @@
                         <div class="text-center text-xl-start text-xxl-center mb-4 mb-xl-0 mb-xxl-4">
                             <h1 class="text-primary">Inicio!</h1>
                         
-                            <form>
+                            <form action="{% url "resultado_imagen" %}" method="POST">
+                              
+                                {% csrf_token %}
+
                                 <div class="mb-3">
-                                    <input id="titulo" class="form-control form-control-solid" type="text" placeholder="Título">
+                                    <input id="titulo" name="titulo" class="form-control form-control-solid" type="text" placeholder="Título">
                                 </div>
 
                                 <div class="mb-3">
-                                    <textarea id="descripcion" class="form-control form-control-solid" rows="3" placeholder="Descripción"></textarea>
+                                    <textarea id="descripcion" name="descripcion" class="form-control form-control-solid" rows="3" placeholder="Descripción"></textarea>
                                 </div>
 
                                 <div class="mb-3">
@@ -29,13 +36,14 @@
                                     <img src="" width="150px" height="120px" id="imagenmuestra">
                                 </div>
 
+                                <div class="col-xl-4 col-xxl-12 text-center">
+                                  <button style="background-color: #92CBC5; border-color: #92CBC5; color: black" class="btn btn-success" type="submit">Analizar</button>
+                                </div>
                             </form>
                             
                         </div>
                     </div>
-                    <div class="col-xl-4 col-xxl-12 text-center">
-                        <button style="background-color: #92CBC5; border-color: #92CBC5; color: black" class="btn btn-success" type="button">Analizar</button>
-                    </div>
+                    
                   </div>
               </div>
             </div>
