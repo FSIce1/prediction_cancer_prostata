@@ -6,3 +6,6 @@ def login(request):
 
 def analisis_imagen(request):
     return render(request, "analisis_imagen.html", {})
+
+def resultado_imagen(request):
+    return render(request, "resultado_imagen.html", {})
