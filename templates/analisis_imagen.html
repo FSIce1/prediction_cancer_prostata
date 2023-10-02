@@ -17,11 +17,12 @@
                         <div class="text-center text-xl-start text-xxl-center mb-4 mb-xl-0 mb-xxl-4">
                             <h1 class="text-primary">Inicio!</h1>
                         
-                            <form action="{% url "resultado_imagen" %}" method="POST">
+                            <form action="{% url "resultado_imagen" %}" method="POST" enctype="multipart/form-data">
                               
                                 {% csrf_token %}
+                                {{ form }}
 
-                                <div class="mb-3">
+                                {% comment %} <div class="mb-3">
                                     <input id="titulo" name="titulo" class="form-control form-control-solid" type="text" placeholder="Título">
                                 </div>
 
@@ -34,9 +35,12 @@
                                     <input type="hidden" class="form-control" name="imagenactual" id="imagenactual">
                                     </br>
                                     <img src="" width="150px" height="120px" id="imagenmuestra">
-                                </div>
+                                </div> {% endcomment %}
+                              
+                                </br>
+                                <img src="" width="150px" height="120px" id="imagenmuestra">
 
-                                <div class="col-xl-4 col-xxl-12 text-center">
+                                <div style="margin-top: 20px" class="col-xl-4 col-xxl-12 text-center">
                                   <button style="background-color: #92CBC5; border-color: #92CBC5; color: black" class="btn btn-success" type="submit">Analizar</button>
                                 </div>
                             </form>
