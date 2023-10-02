@@ -68,7 +68,7 @@
                                         Título: {{analisis.titulo}} </br>
                                         Descripción: {{analisis.descripcion}} </br></br>
                                         Nombre de la imagen: {{analisis.imagen}}</br>
-                                        Tiempo de análisis: 10seg</br>
+                                        Tiempo de análisis: {{tiempoTotal}} segundos</br>
                                         Porcentaje con cáncer: 5%</br>
                                         Porcentaje sin cáncer: 95%</br>
                                         Predicción: El paciente no tiene cáncer de próstata</br>
@@ -77,7 +77,6 @@
 
                                     <!-- IMAGEN DEL PACIENTE -->
                                     <div>
-                                        {% comment %} <img src="{% static 'img/17B0035225_Block_Region_12_24_2_xini_16789_yini_24474.jpg' %}" width="150px" height="120px"/> {% endcomment %}
                                         <img src="{{ analisis.imagen.url }}" width="150px" height="120px"/>
                                     </div>
                                 </div>
