@@ -3,6 +3,10 @@ from .forms import AnalisisImagenForm
 from .models import AnalisisImagen
 from timeit import default_timer
 
+import numpy as np
+import tensorflow as tf
+from PIL import Image
+
 def analisis_imagen(request):
     form = AnalisisImagenForm()
     return render(request, "analisis_imagen.html", {"form": form})
@@ -16,13 +20,47 @@ def resultado_imagen(request):
     descripcion = request.POST["descripcion"];
     imagen = request.FILES["imagen"];
 
+
     analisis = AnalisisImagen(titulo = titulo, descripcion = descripcion, imagen = imagen)
     analisis.save()
 
+    prediccion = realizar_analisis()
+    
+    
     # Fin del algoritmo
-
     fin = default_timer()
     tiempoEstimado = fin - inicio
     tiempoTotal = round(tiempoEstimado, 4)
+    
 
-    return render(request, "resultado_imagen.html", {"analisis": analisis, "tiempoTotal": tiempoTotal})
+    return render(request, "resultado_imagen.html", {"analisis": analisis, "tiempoTotal": tiempoTotal, "prediccion": prediccion})
+
+def realizar_analisis(url_imagen = ""):
+    
+    # PARTE 1
+    BREED_FILE = "analisis/breeds.txt"
+    MODEL_FILE = "analisis/modelo_vgg16.h5"
+    IMG_SIZE = 150
+
+    labels = []
+    with open(BREED_FILE, "r") as f:
+        for line in f:
+            labels.append(line.strip())
+
+    loaded_model = tf.keras.models.load_model(MODEL_FILE)
+    loaded_model.summary()
+
+    image_file = "static/img/17B0035225_Block_Region_12_24_2_xini_16789_yini_24474.jpg"
+    # image_file = "files/imagenes/17B0035225_Block_Region_12_24_2_xini_16789_yini_24474_eW95LpA.jpg"
+    n_top = 2
+
+    img = np.array(Image.open(image_file).resize((IMG_SIZE,IMG_SIZE)), dtype=np.float32)
+    pred = loaded_model.predict(img.reshape(-1, IMG_SIZE, IMG_SIZE, 3))
+
+    top_labels = {}
+    if len(labels) >= n_top:
+        top_labels_ids = np.flip(np.argsort(pred, axis=1)[0, -n_top:])
+        for label_id in top_labels_ids:
+            top_labels[labels[label_id]] = pred[0,label_id].item()
+
+    return top_labels

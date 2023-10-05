@@ -1,1 +1,9 @@
 mysqlclient
+
+# Para consumir el modelo
+django-extensions
+numpy
+tensorflow
+Pillow
+matplotlib
+
