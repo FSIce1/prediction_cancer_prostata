@@ -24,8 +24,8 @@ def resultado_imagen(request):
     analisis = AnalisisImagen(titulo = titulo, descripcion = descripcion, imagen = imagen)
     analisis.save()
 
-    prediccion = realizar_analisis()
-    
+    # Enviamos el nombre de la imagen a la predicción
+    prediccion = realizar_analisis(imagen.name)
     
     # Fin del algoritmo
     fin = default_timer()
@@ -37,10 +37,14 @@ def resultado_imagen(request):
 
 def realizar_analisis(url_imagen = ""):
     
+    # archi1=open("analisis/utils/logs.txt","w") 
+    # archi1.write(url_imagen) 
+    # archi1.close()
+
     # PARTE 1
-    BREED_FILE = "analisis/breeds.txt"
-    MODEL_FILE = "analisis/modelo_vgg16.h5"
-    IMG_SIZE = 150
+    BREED_FILE = "analisis/utils/breeds.txt"
+    MODEL_FILE = "analisis/models/modelo_vgg16_512px.h5"
+    IMG_SIZE = 512
 
     labels = []
     with open(BREED_FILE, "r") as f:
@@ -50,8 +54,9 @@ def realizar_analisis(url_imagen = ""):
     loaded_model = tf.keras.models.load_model(MODEL_FILE)
     loaded_model.summary()
 
-    image_file = "static/img/17B0035225_Block_Region_12_24_2_xini_16789_yini_24474.jpg"
-    # image_file = "files/imagenes/17B0035225_Block_Region_12_24_2_xini_16789_yini_24474_eW95LpA.jpg"
+    # image_file = "files/imagenes/pruebas/imagen_de_prueba.jpg"
+    image_file = "files/imagenes/"+url_imagen
+
     n_top = 2
 
     img = np.array(Image.open(image_file).resize((IMG_SIZE,IMG_SIZE)), dtype=np.float32)
