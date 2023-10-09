@@ -3,13 +3,49 @@ from .forms import AnalisisImagenForm
 from .models import AnalisisImagen
 from timeit import default_timer
 
+# Modelo
 import numpy as np
 import tensorflow as tf
 from PIL import Image
 
+# Api - Reniec
+from urllib.request import urlopen
+from django.http import JsonResponse 
+# import json
+import requests
+from django.views.decorators.csrf import csrf_exempt
+
+url = "https://api.apis.net.pe/v1/dni?numero="
+
+# Funciones
 def analisis_imagen(request):
     form = AnalisisImagenForm()
     return render(request, "analisis_imagen.html", {"form": form})
+
+@csrf_exempt
+def buscar_por_dni(request):
+
+    try:
+        
+        dni = request.POST["dni"]  
+        
+        response = requests.get(url+dni, headers={})
+        json = response.json()
+        
+        data = {}
+        data["bool"] = True;
+        data["resultado"] = json;
+
+        return JsonResponse({"data": data}) 
+    
+    except:
+    
+        data = {}
+        data["bool"] = False;
+        data["resultado"] = "Persona no pudo ser encontrada";
+
+        return JsonResponse({"data": data}) 
+    
         
 def resultado_imagen(request):
 
@@ -32,7 +68,6 @@ def resultado_imagen(request):
     tiempoEstimado = fin - inicio
     tiempoTotal = round(tiempoEstimado, 4)
     
-
     return render(request, "resultado_imagen.html", {"analisis": analisis, "tiempoTotal": tiempoTotal, "prediccion": prediccion})
 
 def realizar_analisis(url_imagen = ""):
