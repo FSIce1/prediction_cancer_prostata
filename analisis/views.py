@@ -52,12 +52,16 @@ def resultado_imagen(request):
     inicio = default_timer()
 
     # Inicio del algoritmo
+    dni = request.POST["dni"];
+    nombres = request.POST["nombres"];
+    apellidoMaterno = request.POST["apellidoMaterno"];
+    apellidoPaterno = request.POST["apellidoPaterno"];
     titulo = request.POST["titulo"];
     descripcion = request.POST["descripcion"];
     imagen = request.FILES["imagen"];
 
 
-    analisis = AnalisisImagen(titulo = titulo, descripcion = descripcion, imagen = imagen)
+    analisis = AnalisisImagen(dni = dni, nombres= nombres, apellidoMaterno = apellidoMaterno, apellidoPaterno = apellidoPaterno, titulo = titulo, descripcion = descripcion, imagen = imagen)
     analisis.save()
 
     # Enviamos el nombre de la imagen a la predicción
@@ -68,7 +72,9 @@ def resultado_imagen(request):
     tiempoEstimado = fin - inicio
     tiempoTotal = round(tiempoEstimado, 4)
     
-    return render(request, "resultado_imagen.html", {"analisis": analisis, "tiempoTotal": tiempoTotal, "prediccion": prediccion})
+    prediction = prediccion.get("ConCancer")
+    
+    return render(request, "resultado_imagen.html", {"analisis": analisis, "tiempoTotal": tiempoTotal, "prediccion": prediction})
 
 def realizar_analisis(url_imagen = ""):
     

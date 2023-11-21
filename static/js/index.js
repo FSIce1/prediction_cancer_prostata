@@ -3,7 +3,6 @@ function buscar_por_dni(dni){
     
     let data = new FormData();
     data.append('dni', dni);
-    // "X-CSRFToken": $.cookie("csrftoken")
 
     $.ajax({
         type: "POST",
@@ -18,14 +17,17 @@ function buscar_por_dni(dni){
         ContentType: "application/json",
         success: function(response){
 
-            console.log(response);
             let data = response.data;
 
             if(data.bool){
 
+                // if(data.resultado.message ===  undefined){
+                //     Swal.fire('Servicio!', data.resultado.error, 'warning');
+                // }
+                console.log(data.resultado)
                 if(data.resultado.error ===  undefined) {
                     
-                    llenarDatos(data.resultado);
+                    llenarDatos(data.resultado, dni);
                     
                     Swal.fire('Persona Encontrada!', 'Resultado: ' + data.resultado.nombre, 'success');
                     
@@ -38,25 +40,28 @@ function buscar_por_dni(dni){
             }
         },
         error: function(error){
-            console.log("error")
-            console.log(error)
+            console.log(error);
         }
     })
 
 }
 
-function llenarDatos(resultado){
-    
-    document.getElementById('id_dni').disabled = true;
+function llenarDatos(resultado, dni){
+
+    document.getElementById("id_dni").value = dni;
+    document.getElementById('id_dni_texto').disabled = true;
 
     document.getElementById("id_nombres").value = resultado.nombres; 
-    document.getElementById('id_nombres').disabled = true;
+    document.getElementById("id_nombres_texto").value = resultado.nombres; 
+    document.getElementById('id_nombres_texto').disabled = true;
 
     document.getElementById("id_apellidoMaterno").value = resultado.apellidoMaterno; 
-    document.getElementById('id_apellidoMaterno').disabled = true;
+    document.getElementById("id_apellidoMaterno_texto").value = resultado.apellidoMaterno; 
+    document.getElementById('id_apellidoMaterno_texto').disabled = true;
 
     document.getElementById("id_apellidoPaterno").value = resultado.apellidoPaterno; 
-    document.getElementById('id_apellidoPaterno').disabled = true;
+    document.getElementById("id_apellidoPaterno_texto").value = resultado.apellidoPaterno; 
+    document.getElementById('id_apellidoPaterno_texto').disabled = true;
 
 }
 
@@ -75,19 +80,7 @@ function getCookie(c_name){
 
 window.addEventListener("keydown", (event) => {
     if (event.keyCode === 13) {
-        let dni = document.getElementById("id_dni").value; 
+        let dni = document.getElementById("id_dni_texto").value; 
         buscar_por_dni(dni);
     }
 })
-
-// document.getElementById("dni").addEventListener("keydown", function(event) {
-//     event.preventDefault();
-//     if (event.keyCode === 13) {
-//         let dni = document.getElementById("dni").value();
-//         buscar_por_dni(dni);
-//     }
-// });
-
-// $(document).ready(function (){
-//     buscar_por_dni();
-// });
