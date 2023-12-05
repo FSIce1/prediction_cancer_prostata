@@ -34,15 +34,35 @@ def buscar_por_dni(request):
         json = response.json()
         
         data = {}
-        data["bool"] = True;
-        data["resultado"] = json;
-        data["consumo"] = "API";
 
-        # Registramos el paciente
-        paciente = Paciente.objects.filter(dni=dni).exists();
-        if not paciente:
-            paciente = Paciente(dni = dni, nombres= json["nombres"], apellidoMaterno = json["apellidoMaterno"], apellidoPaterno = json["apellidoPaterno"])
-            paciente.save()
+        if (json["nombres"] == ""):
+        
+            # Buscamos en la tabla de paciente
+            paciente = Paciente.objects.filter(dni=dni).exists();
+
+            if paciente:
+                paciente = Paciente.objects.get(dni=dni)
+                
+                json = {"dni": dni, "nombre": (paciente.apellidoPaterno + paciente.apellidoMaterno + paciente.nombres),"nombres": paciente.nombres, "apellidoMaterno": paciente.apellidoMaterno, "apellidoPaterno": paciente.apellidoPaterno}
+                
+                data["bool"]        = True;
+                data["resultado"]   = json;
+                data["consumo"]     = "BASE DE DATOS";
+            else :
+                data["bool"]        = False;
+                data["resultado"]   = "Persona no pudo ser encontrada";
+            
+        else:
+
+            # Registramos el paciente
+            paciente = Paciente.objects.filter(dni=dni).exists();
+            if not paciente:
+                paciente = Paciente(dni = dni, nombres = json["nombres"], apellidoMaterno = json["apellidoMaterno"], apellidoPaterno = json["apellidoPaterno"])
+                paciente.save()
+        
+            data["bool"]        = True;
+            data["resultado"]   = json;
+            data["consumo"]     = "API";
         
         return JsonResponse({"data": data}) 
     
@@ -58,12 +78,12 @@ def buscar_por_dni(request):
             
             json = {"dni": dni, "nombre": (paciente.apellidoPaterno + paciente.apellidoMaterno + paciente.nombres),"nombres": paciente.nombres, "apellidoMaterno": paciente.apellidoMaterno, "apellidoPaterno": paciente.apellidoPaterno}
             
-            data["bool"] = True;
-            data["resultado"] = json;
-            data["consumo"] = "BASE DE DATOS";
+            data["bool"]        = True;
+            data["resultado"]   = json;
+            data["consumo"]     = "BASE DE DATOS";
         else :
-            data["bool"] = False;
-            data["resultado"] = "Persona no pudo ser encontrada";
+            data["bool"]        = False;
+            data["resultado"]   = "Persona no pudo ser encontrada";
 
     return JsonResponse({"data": data})
         
@@ -81,7 +101,16 @@ def resultado_imagen(request):
     imagen = request.FILES["imagen"];
 
 
-    analisis = AnalisisImagen(dni = dni, nombres= nombres, apellidoMaterno = apellidoMaterno, apellidoPaterno = apellidoPaterno, titulo = titulo, descripcion = descripcion, imagen = imagen)
+    analisis = AnalisisImagen(
+        dni             = dni, 
+        nombres         = nombres, 
+        apellidoMaterno = apellidoMaterno, 
+        apellidoPaterno = apellidoPaterno, 
+        titulo          = titulo, 
+        descripcion     = descripcion, 
+        imagen          = imagen,
+    )
+
     analisis.save()
 
     # Enviamos el nombre de la imagen a la predicción
@@ -94,6 +123,12 @@ def resultado_imagen(request):
     
     prediction = prediccion.get("ConCancer")
     
+    # Guardamos los datos del resultado
+    p = AnalisisImagen.objects.get(id=analisis.id)
+    p.resultado = prediction
+    p.tiempo = tiempoTotal
+    p.save()
+
     return render(request, "resultado_imagen.html", {"analisis": analisis, "tiempoTotal": tiempoTotal, "prediccion": prediction})
 
 def realizar_analisis(url_imagen = ""):
@@ -130,3 +165,7 @@ def realizar_analisis(url_imagen = ""):
             top_labels[labels[label_id]] = pred[0,label_id].item()
 
     return top_labels
+
+def historial_analisis(request):
+    analisis = AnalisisImagen.objects.all().order_by('-id')
+    return render(request, "historial_analisis.html", {"analisis": analisis})
