@@ -1,7 +1,8 @@
 from django.shortcuts import render
 from .forms import AnalisisImagenForm
-from .models import AnalisisImagen
+from .models import AnalisisImagen, Paciente
 from timeit import default_timer
+from django.core import serializers
 
 # Modelo
 import numpy as np
@@ -35,17 +36,36 @@ def buscar_por_dni(request):
         data = {}
         data["bool"] = True;
         data["resultado"] = json;
+        data["consumo"] = "API";
 
+        # Registramos el paciente
+        paciente = Paciente.objects.filter(dni=dni).exists();
+        if not paciente:
+            paciente = Paciente(dni = dni, nombres= json["nombres"], apellidoMaterno = json["apellidoMaterno"], apellidoPaterno = json["apellidoPaterno"])
+            paciente.save()
+        
         return JsonResponse({"data": data}) 
     
     except:
     
         data = {}
-        data["bool"] = False;
-        data["resultado"] = "Persona no pudo ser encontrada";
+        dni = request.POST["dni"]
+        
+        # Buscamos en la tabla de paciente
+        paciente = Paciente.objects.filter(dni=dni).exists();
+        if paciente:
+            paciente = Paciente.objects.get(dni=dni)
+            
+            json = {"dni": dni, "nombre": (paciente.apellidoPaterno + paciente.apellidoMaterno + paciente.nombres),"nombres": paciente.nombres, "apellidoMaterno": paciente.apellidoMaterno, "apellidoPaterno": paciente.apellidoPaterno}
+            
+            data["bool"] = True;
+            data["resultado"] = json;
+            data["consumo"] = "BASE DE DATOS";
+        else :
+            data["bool"] = False;
+            data["resultado"] = "Persona no pudo ser encontrada";
 
-        return JsonResponse({"data": data}) 
-    
+    return JsonResponse({"data": data})
         
 def resultado_imagen(request):
 

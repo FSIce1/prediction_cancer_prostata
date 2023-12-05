@@ -17,32 +17,52 @@ function buscar_por_dni(dni){
         ContentType: "application/json",
         success: function(response){
 
+            console.log(response);
             let data = response.data;
 
             if(data.bool){
 
-                // if(data.resultado.message ===  undefined){
-                //     Swal.fire('Servicio!', data.resultado.error, 'warning');
-                // }
-                console.log(data.resultado)
                 if(data.resultado.error ===  undefined) {
-                    
-                    llenarDatos(data.resultado, dni);
-                    
-                    Swal.fire('Persona Encontrada!', 'Resultado: ' + data.resultado.nombre, 'success');
+    
+                    if(!(data.resultado.nombre == "" ||data.resultado.nombre == undefined || data.resultado.nombre == null)){
+                        
+                        llenarDatos(data.resultado, dni);
+                        
+                        Swal.fire('Exitoso!', 'Resultado: ' + data.resultado.nombre, 'success');
+
+                    } else {
+                        Swal.fire('Advertencia!', castError("failed"), 'warning');
+                    }
                     
                 } else {
-                    Swal.fire('Persona no encontrada!', data.resultado.error, 'warning');
+                    Swal.fire('Advertencia!', castError(data.resultado.error), 'warning');
                 }
             
             } else {
-                Swal.fire('Persona no encontrada!', data.resultado, 'warning');
+                Swal.fire('Advertencia!', castError(data.resultado), 'warning');
             }
         },
         error: function(error){
             console.log(error);
         }
     })
+
+}
+
+function castError(value){
+    
+    switch (value) {
+    
+        case "Invalid dni":
+            return "DNI Inválido";
+    
+        case "failed":
+            return "Persona no encontrada";
+    
+        default:
+            return value;
+    
+    }
 
 }
 

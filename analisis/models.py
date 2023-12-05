@@ -11,3 +11,12 @@ class AnalisisImagen(models.Model):
 
     def __str__(self):
         return self.titulo
+    
+class Paciente(models.Model):
+    dni = models.CharField(max_length=8, blank=False, null=False, default='')
+    nombres = models.CharField(max_length=150, blank=False, null=False, default='')
+    apellidoMaterno = models.CharField(max_length=150, blank=False, null=False, default='')
+    apellidoPaterno = models.CharField(max_length=150, blank=False, null=False, default='')
+
+    def __str__(self):
+        return self.dni

@@ -1,0 +1,8 @@
+Correr el proyecto
+> python manage.py runserver 
+
+Generar las migraciones
+> python manage.py makemigrations
+
+Crear las tablas
+> python manage.py migrate
