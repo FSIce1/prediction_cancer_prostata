@@ -15,9 +15,34 @@
                   <div class="row align-items-center">
                     <div class="col-xl-8 col-xxl-12">
                         <div class="text-center text-xl-start text-xxl-center mb-4 mb-xl-0 mb-xxl-4">
-                            <h1 class="text-primary">Resultados!</h1>
+                            <h1 class="text-primary">Resultados</h1>
                             <br>
-                            
+
+                            <nav class="navbar">
+                              <form action="{% url "historial_analisis" %}" autocomplete="off" method="POST">
+                                {% csrf_token %}
+                                             
+                                <div style="display: flex; justify-content: flex-start;">             
+                                  
+                                  <input type="text" placeholder="Buscar:" name="elemento" class="form-control" value="{{ elemento }}" />
+                                  
+                                  <select name="opcion" style="margin-left: 5px" class="form-select" value="{{ opcion }}">
+                                    <option value="">Seleccione una opción</option>
+                                    <option value="dni">Dni</option>
+                                    <option value="nombres">Nombres</option>
+                                    <option value="apellidoMaterno">Apellido Materno</option>
+                                    <option value="apellidoPaterno">Apellido Paterno</option>
+                                  </select>
+
+                                  <button style="margin-left: 5px" type="submit" class="btn btn-primary" data-mdb-ripple-init>
+                                    <i class="fas fa-search"></i>
+                                  </button>
+
+                                </div>
+
+                              </form>
+                            </nav>
+
                             <table class="table">
                               <thead>
                                 <tr>
@@ -31,26 +56,23 @@
                                 </tr>
                               </thead>
                               <tbody>
-                                {% for item in  analisis%}
-                                  <tr>
-                                    <th scope="row">{{forloop.counter}}</th>
-                                    <td>{{item.dni}}</td>
-                                    <td>{{item.nombres}}</td>
-                                    <td>{{item.apellidoMaterno}}</td>
-                                    <td>{{item.apellidoPaterno}}</td>
-                                    <td>{{item.resultado}}</td>
-                                    <td>{{item.tiempo}}</td>
-                                  </tr>
-                                {% endfor %}
-                                {% comment %} <tr>
-                                  <th scope="row">1</th>
-                                  <td>Mark</td>
-                                  <td>Otto</td>
-                                  <td>@mdo</td>
-                                  <td>@mdo</td>
-                                  <td>@mdo</td>
-                                  <td>@mdo</td>
-                                </tr> {% endcomment %}
+                                {% if analisis %}
+                                  {% for item in  analisis%}
+                                    <tr>
+                                      <th scope="row">{{forloop.counter}}</th>
+                                      <td>{{item.dni}}</td>
+                                      <td>{{item.nombres}}</td>
+                                      <td>{{item.apellidoMaterno}}</td>
+                                      <td>{{item.apellidoPaterno}}</td>
+                                      <td>{{item.resultado}}</td>
+                                      <td>{{item.tiempo}}</td>
+                                    </tr>
+                                  {% endfor %}
+                                {% else %}
+                                    <tr>
+                                      <td colspan="7">No se encontraron resultados</td>
+                                    </tr>
+                                {% endif %}
                               </tbody>
                             </table>
                             

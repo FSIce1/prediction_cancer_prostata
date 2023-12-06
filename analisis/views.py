@@ -3,6 +3,7 @@ from .forms import AnalisisImagenForm
 from .models import AnalisisImagen, Paciente
 from timeit import default_timer
 from django.core import serializers
+from django.db.models import Q
 
 # Modelo
 import numpy as np
@@ -167,5 +168,34 @@ def realizar_analisis(url_imagen = ""):
     return top_labels
 
 def historial_analisis(request):
-    analisis = AnalisisImagen.objects.all().order_by('-id')
-    return render(request, "historial_analisis.html", {"analisis": analisis})
+    
+    elemento = request.POST.get('elemento', False)
+    opcion = request.POST.get('opcion', False)
+
+    if(opcion):
+       
+       elemento = elemento.upper()
+
+       match opcion:
+        case "":
+            analisis = AnalisisImagen.objects.filter(Q(dni__startswith=elemento) | Q(nombres__startswith=elemento) | Q(apellidoMaterno__startswith=elemento) | Q(apellidoPaterno__startswith=elemento)).order_by('-id').values()
+        case "dni":
+            analisis = AnalisisImagen.objects.filter(dni__startswith=elemento).order_by('-id').values()
+        case "nombres":
+            analisis = AnalisisImagen.objects.filter(nombres__startswith=elemento).order_by('-id').values()
+        case "apellidoMaterno":
+            analisis = AnalisisImagen.objects.filter(apellidoMaterno__startswith=elemento).order_by('-id').values()
+        case "apellidoPaterno":
+            analisis = AnalisisImagen.objects.filter(apellidoPaterno__startswith=elemento).order_by('-id').values()
+        case default:
+            analisis = AnalisisImagen.objects.filter(Q(dni__startswith=elemento) | Q(nombres__startswith=elemento) | Q(apellidoMaterno__startswith=elemento) | Q(apellidoPaterno__startswith=elemento)).order_by('-id').values()
+
+    else:
+        analisis = AnalisisImagen.objects.all().order_by('-id')
+
+    # if(elemento):
+    #     analisis = AnalisisImagen.objects.filter(dni=elemento).order_by('-id').values()
+    # else:
+    #     analisis = AnalisisImagen.objects.all().order_by('-id')
+    
+    return render(request, "historial_analisis.html", {"analisis": analisis, "opcion": opcion, "elemento": elemento})
