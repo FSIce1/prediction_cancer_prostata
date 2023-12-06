@@ -36,7 +36,7 @@ def buscar_por_dni(request):
         
         data = {}
 
-        if (json["nombres"] == ""):
+        if (not json["nombres"]):
         
             # Buscamos en la tabla de paciente
             paciente = Paciente.objects.filter(dni=dni).exists();
@@ -192,10 +192,39 @@ def historial_analisis(request):
 
     else:
         analisis = AnalisisImagen.objects.all().order_by('-id')
-
-    # if(elemento):
-    #     analisis = AnalisisImagen.objects.filter(dni=elemento).order_by('-id').values()
-    # else:
-    #     analisis = AnalisisImagen.objects.all().order_by('-id')
     
+    if(not elemento):
+       elemento = ""
+
     return render(request, "historial_analisis.html", {"analisis": analisis, "opcion": opcion, "elemento": elemento})
+
+def pacientes(request):
+    
+    elemento = request.POST.get('elemento', False)
+    opcion = request.POST.get('opcion', False)
+
+    if(opcion):
+       
+       elemento = elemento.upper()
+
+       match opcion:
+        case "":
+            pacientes = Paciente.objects.filter(Q(dni__startswith=elemento) | Q(nombres__startswith=elemento) | Q(apellidoMaterno__startswith=elemento) | Q(apellidoPaterno__startswith=elemento)).order_by('-id').values()
+        case "dni":
+            pacientes = Paciente.objects.filter(dni__startswith=elemento).order_by('-id').values()
+        case "nombres":
+            pacientes = Paciente.objects.filter(nombres__startswith=elemento).order_by('-id').values()
+        case "apellidoMaterno":
+            pacientes = Paciente.objects.filter(apellidoMaterno__startswith=elemento).order_by('-id').values()
+        case "apellidoPaterno":
+            pacientes = Paciente.objects.filter(apellidoPaterno__startswith=elemento).order_by('-id').values()
+        case default:
+            pacientes = Paciente.objects.filter(Q(dni__startswith=elemento) | Q(nombres__startswith=elemento) | Q(apellidoMaterno__startswith=elemento) | Q(apellidoPaterno__startswith=elemento)).order_by('-id').values()
+
+    else:
+        pacientes = Paciente.objects.all().order_by('-id')
+    
+    if(not elemento):
+       elemento = ""
+
+    return render(request, "pacientes.html", {"pacientes": pacientes, "opcion": opcion, "elemento": elemento})

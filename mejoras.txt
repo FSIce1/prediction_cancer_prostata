@@ -1,9 +1,7 @@
 
 3. Normalizar tablas
-
 6. Pdf del resultado
 7. Correo del resultado**
-8. Listado de pacientes (Dni, Nombre, Apellido, número de análisis)
 9. Tabla de logs (errores)
 11. Mejorar diseño
 12. Mejorar validaciones con swal
@@ -19,6 +17,7 @@ RESUELTAS
 4. El api se cae recurrentemente -> cada vez que consulto al api, si me trae resultados lo guardo en una tabla (pacientes)... ya que si consulto
 y el api no funciona, consulto a la tabla 'pacientes'.
 5. Filtrador en el historial (dni, nombre, apellido, 'Con Cancer', 'Sin Cancer')
+8. Listado de pacientes (Dni, Nombre, Apellido, número de análisis)
 10. undefined (token del api)
 
 
