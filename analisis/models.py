@@ -22,3 +22,10 @@ class Paciente(models.Model):
 
     def __str__(self):
         return self.dni
+    
+class Logs(models.Model):
+    funcion = models.CharField(max_length=150, blank=False, null=False, default='')
+    resultado = models.CharField(max_length=150, blank=False, null=False, default='')
+
+    def __str__(self):
+        return self.funcion

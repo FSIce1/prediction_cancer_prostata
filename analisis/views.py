@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from .forms import AnalisisImagenForm
-from .models import AnalisisImagen, Paciente
+from .models import AnalisisImagen, Paciente, Logs
 from timeit import default_timer
 from django.core import serializers
 from django.db.models import Q
@@ -90,80 +90,102 @@ def buscar_por_dni(request):
         
 def resultado_imagen(request):
 
-    inicio = default_timer()
+    try:
 
-    # Inicio del algoritmo
-    dni = request.POST["dni"];
-    nombres = request.POST["nombres"];
-    apellidoMaterno = request.POST["apellidoMaterno"];
-    apellidoPaterno = request.POST["apellidoPaterno"];
-    titulo = request.POST["titulo"];
-    descripcion = request.POST["descripcion"];
-    imagen = request.FILES["imagen"];
+        inicio = default_timer()
+
+        # Inicio del algoritmo
+        dni = request.POST["dni"];
+        nombres = request.POST["nombres"];
+        apellidoMaterno = request.POST["apellidoMaterno"];
+        apellidoPaterno = request.POST["apellidoPaterno"];
+        titulo = request.POST["titulo"];
+        descripcion = request.POST["descripcion"];
+        imagen = request.FILES["imagen"];
 
 
-    analisis = AnalisisImagen(
-        dni             = dni, 
-        nombres         = nombres, 
-        apellidoMaterno = apellidoMaterno, 
-        apellidoPaterno = apellidoPaterno, 
-        titulo          = titulo, 
-        descripcion     = descripcion, 
-        imagen          = imagen,
-    )
+        analisis = AnalisisImagen(
+            dni             = dni, 
+            nombres         = nombres, 
+            apellidoMaterno = apellidoMaterno, 
+            apellidoPaterno = apellidoPaterno, 
+            titulo          = titulo, 
+            descripcion     = descripcion, 
+            imagen          = imagen,
+        )
 
-    analisis.save()
+        analisis.save()
 
-    # Enviamos el nombre de la imagen a la predicción
-    prediccion = realizar_analisis(imagen.name)
-    
-    # Fin del algoritmo
-    fin = default_timer()
-    tiempoEstimado = fin - inicio
-    tiempoTotal = round(tiempoEstimado, 4)
-    
-    prediction = prediccion.get("ConCancer")
-    
-    # Guardamos los datos del resultado
-    p = AnalisisImagen.objects.get(id=analisis.id)
-    p.resultado = prediction
-    p.tiempo = tiempoTotal
-    p.save()
+        # Enviamos el nombre de la imagen a la predicción
+        prediccion = realizar_analisis(imagen.name)
+        
+        # Fin del algoritmo
+        fin = default_timer()
+        tiempoEstimado = fin - inicio
+        tiempoTotal = round(tiempoEstimado, 4)
+        
+        prediction = prediccion.get("ConCancer")
+        
+        # Guardamos los datos del resultado
+        p = AnalisisImagen.objects.get(id=analisis.id)
+        p.resultado = prediction
+        p.tiempo = tiempoTotal
+        p.save()
+        
+    except:
+
+        log = Logs(
+            funcion     = "resultado_imagen", 
+            resultado   = "Problema al guardar el análisis",
+        )
+
+        log.save()
 
     return render(request, "resultado_imagen.html", {"analisis": analisis, "tiempoTotal": tiempoTotal, "prediccion": prediction})
 
 def realizar_analisis(url_imagen = ""):
     
-    # archi1=open("analisis/utils/logs.txt","w") 
-    # archi1.write(url_imagen) 
-    # archi1.close()
+    try:
 
-    # PARTE 1
-    BREED_FILE = "analisis/utils/breeds.txt"
-    MODEL_FILE = "analisis/models/modelo_vgg16_512px.h5"
-    IMG_SIZE = 512
+        # archi1=open("analisis/utils/logs.txt","w") 
+        # archi1.write(url_imagen) 
+        # archi1.close()
 
-    labels = []
-    with open(BREED_FILE, "r") as f:
-        for line in f:
-            labels.append(line.strip())
+        # PARTE 1
+        BREED_FILE = "analisis/utils/breeds.txt"
+        MODEL_FILE = "analisis/models/modelo_vgg16_512px.h5"
+        IMG_SIZE = 512
 
-    loaded_model = tf.keras.models.load_model(MODEL_FILE)
-    loaded_model.summary()
+        labels = []
+        with open(BREED_FILE, "r") as f:
+            for line in f:
+                labels.append(line.strip())
 
-    # image_file = "files/imagenes/pruebas/imagen_de_prueba.jpg"
-    image_file = "files/imagenes/"+url_imagen
+        loaded_model = tf.keras.models.load_model(MODEL_FILE)
+        loaded_model.summary()
 
-    n_top = 2
+        # image_file = "files/imagenes/pruebas/imagen_de_prueba.jpg"
+        image_file = "files/imagenes/"+url_imagen
 
-    img = np.array(Image.open(image_file).resize((IMG_SIZE,IMG_SIZE)), dtype=np.float32)
-    pred = loaded_model.predict(img.reshape(-1, IMG_SIZE, IMG_SIZE, 3))
+        n_top = 2
 
-    top_labels = {}
-    if len(labels) >= n_top:
-        top_labels_ids = np.flip(np.argsort(pred, axis=1)[0, -n_top:])
-        for label_id in top_labels_ids:
-            top_labels[labels[label_id]] = pred[0,label_id].item()
+        img = np.array(Image.open(image_file).resize((IMG_SIZE,IMG_SIZE)), dtype=np.float32)
+        pred = loaded_model.predict(img.reshape(-1, IMG_SIZE, IMG_SIZE, 3))
+
+        top_labels = {}
+        if len(labels) >= n_top:
+            top_labels_ids = np.flip(np.argsort(pred, axis=1)[0, -n_top:])
+            for label_id in top_labels_ids:
+                top_labels[labels[label_id]] = pred[0,label_id].item()
+
+    except:
+    
+        log = Logs(
+            funcion     = "realizar_analisis", 
+            resultado   = "Problema al hacer la predicción de la imagen",
+        )
+
+        log.save()
 
     return top_labels
 
