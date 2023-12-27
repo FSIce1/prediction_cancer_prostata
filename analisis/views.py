@@ -5,6 +5,10 @@ from timeit import default_timer
 from django.core import serializers
 from django.db.models import Q
 
+# Firebase
+import firebase_admin
+from firebase_admin import credentials, auth, db
+
 # Modelo
 import numpy as np
 import tensorflow as tf
@@ -13,6 +17,7 @@ from PIL import Image
 # Api - Reniec
 from urllib.request import urlopen
 from django.http import JsonResponse 
+
 # import json
 import requests
 from django.views.decorators.csrf import csrf_exempt
@@ -20,9 +25,47 @@ from django.views.decorators.csrf import csrf_exempt
 url = "https://api.apis.net.pe/v1/dni?numero="
 
 # Funciones
+
+def create_user(request):
+    
+    try:
+    
+        if not firebase_admin._apps:
+            firebase_sdk = credentials.Certificate('cancer_prostata/tesis-prostata-firebase-adminsdk-cjra8-fa2078f5be.json')
+            firebase_admin.initialize_app(firebase_sdk)
+
+        email = request.POST["email"];
+        password = request.POST["password"];
+
+        user = auth.create_user(email = email, password = password)
+
+        return render(request, "login.html", {"message": "Usuario creado correctamente"})
+    
+    except:
+    
+        return render(request, "login.html", {"message": "Usuario no pudo ser creado"})
+
 def analisis_imagen(request):
-    form = AnalisisImagenForm()
-    return render(request, "analisis_imagen.html", {"form": form})
+
+    if not firebase_admin._apps:
+        firebase_sdk = credentials.Certificate('cancer_prostata/tesis-prostata-firebase-adminsdk-cjra8-fa2078f5be.json')
+        firebase_admin.initialize_app(firebase_sdk)
+
+    email = request.POST["email"];
+    password = request.POST["password"];
+
+    try:
+        user = auth.get_user_by_email(email)
+
+        auth_user = auth.update_user(user.uid, password=password)
+
+        form = AnalisisImagenForm()
+        return render(request, "analisis_imagen.html", {"form": form})
+    
+    except Exception as e:
+
+        return render(request, "login.html", {"message": e})
+
 
 @csrf_exempt
 def buscar_por_dni(request):

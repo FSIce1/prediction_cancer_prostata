@@ -6,4 +6,5 @@ numpy
 tensorflow
 Pillow
 matplotlib
+pyrebase4
 

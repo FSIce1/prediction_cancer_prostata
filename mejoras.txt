@@ -5,7 +5,7 @@
 11. Mejorar diseño
 12. Mejorar validaciones con swal
 13. Logueo (crear tablas de usuario)
-14. Login con firebase
+15. Hallazgo -> Logueo contraseña
 
 =========
 RESUELTAS
@@ -19,5 +19,6 @@ y el api no funciona, consulto a la tabla 'pacientes'.
 8. Listado de pacientes (Dni, Nombre, Apellido, número de análisis)
 10. undefined (token del api)
 9. Tabla de logs (errores)
+14. Login con firebase
 
 
