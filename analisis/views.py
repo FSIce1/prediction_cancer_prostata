@@ -45,7 +45,7 @@ def create_user(request):
     
         return render(request, "login.html", {"message": "Usuario no pudo ser creado"})
 
-def analisis_imagen(request):
+def inicio(request):
 
     if not firebase_admin._apps:
         firebase_sdk = credentials.Certificate('cancer_prostata/tesis-prostata-firebase-adminsdk-cjra8-fa2078f5be.json')
@@ -65,7 +65,11 @@ def analisis_imagen(request):
     except Exception as e:
 
         return render(request, "login.html", {"message": e})
+    
+def analisis_imagen(request):
 
+    form = AnalisisImagenForm()
+    return render(request, "analisis_imagen.html", {"form": form})    
 
 @csrf_exempt
 def buscar_por_dni(request):

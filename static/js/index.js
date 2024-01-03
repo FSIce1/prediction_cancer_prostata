@@ -24,7 +24,7 @@ function buscar_por_dni(dni){
 
                 if(data.resultado.error ===  undefined) {
     
-                    if(!(data.resultado.nombre == "" ||data.resultado.nombre == undefined || data.resultado.nombre == null)){
+                    if(!(data.resultado.nombre == "" || data.resultado.nombre == undefined || data.resultado.nombre == null)){
                         
                         llenarDatos(data.resultado, dni);
                         
@@ -82,6 +82,25 @@ function llenarDatos(resultado, dni){
     document.getElementById("id_apellidoPaterno").value = resultado.apellidoPaterno; 
     document.getElementById("id_apellidoPaterno_texto").value = resultado.apellidoPaterno; 
     document.getElementById('id_apellidoPaterno_texto').disabled = true;
+
+    let nombres = document.getElementById('id_nombres_texto');
+    let apellidoMaterno = document.getElementById('id_apellidoMaterno_texto');
+    let apellidoPaterno = document.getElementById('id_apellidoPaterno_texto');
+
+    if(nombres.value.trim() == "")
+        nombres.style.border = '2px solid red';
+    else
+        nombres.style.border = '2px solid green';
+
+    if(apellidoMaterno.value.trim() == "")
+        apellidoMaterno.style.border = '2px solid red';
+    else
+        apellidoMaterno.style.border = '2px solid green';
+
+    if(apellidoPaterno.value.trim() == "")
+        apellidoPaterno.style.border = '2px solid red';
+    else
+        apellidoPaterno.style.border = '2px solid green';
 
 }
 
