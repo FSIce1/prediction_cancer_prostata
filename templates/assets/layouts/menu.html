@@ -22,9 +22,22 @@
 
                 <div class="collapse show" id="collapseDashboards" data-bs-parent="#accordionSidenav">
                     <nav class="sidenav-menu-nested nav accordion" id="accordionSidenavPages">
-                        <a class="nav-link active" href="{% url 'analisis_imagen' %}">Análisis de imagen</a>
-                        <a class="nav-link" href="{% url 'historial_analisis' %}">Historial del análisis</a>
-                        <a class="nav-link" href="{% url 'pacientes' %}">Pacientes</a>
+                        
+                        {% if modo == "historial" %}
+                            <a class="nav-link" href="{% url 'analisis_imagen' %}">Análisis de imagen</a>
+                            <a class="nav-link active" href="{% url 'historial_analisis' %}">Historial del análisis</a>
+                            <a class="nav-link" href="{% url 'pacientes' %}">Pacientes</a>
+                        {% elif modo == "pacientes" %}
+                            <a class="nav-link" href="{% url 'analisis_imagen' %}">Análisis de imagen</a>
+                            <a class="nav-link" href="{% url 'historial_analisis' %}">Historial del análisis</a>
+                            <a class="nav-link active" href="{% url 'pacientes' %}">Pacientes</a>
+                        {% elif modo == "analisis" %}
+                            <a class="nav-link active" href="{% url 'analisis_imagen' %}">Análisis de imagen</a>
+                            <a class="nav-link" href="{% url 'historial_analisis' %}">Historial del análisis</a>
+                            <a class="nav-link" href="{% url 'pacientes' %}">Pacientes</a>
+                        {% endif %}
+                        
+
                     </nav>
                 </div>
             

@@ -60,7 +60,7 @@ def inicio(request):
         auth_user = auth.update_user(user.uid, password=password)
 
         form = AnalisisImagenForm()
-        return render(request, "analisis_imagen.html", {"form": form})
+        return render(request, "analisis_imagen.html", {"form": form, "modo": "analisis"})
     
     except Exception as e:
 
@@ -69,7 +69,7 @@ def inicio(request):
 def analisis_imagen(request):
 
     form = AnalisisImagenForm()
-    return render(request, "analisis_imagen.html", {"form": form})    
+    return render(request, "analisis_imagen.html", {"form": form, "modo": "analisis"})    
 
 @csrf_exempt
 def buscar_por_dni(request):
@@ -265,7 +265,7 @@ def historial_analisis(request):
     if(not elemento):
        elemento = ""
 
-    return render(request, "historial_analisis.html", {"analisis": analisis, "opcion": opcion, "elemento": elemento})
+    return render(request, "historial_analisis.html", {"analisis": analisis, "opcion": opcion, "elemento": elemento, "modo": "historial"})
 
 def pacientes(request):
     
@@ -296,4 +296,4 @@ def pacientes(request):
     if(not elemento):
        elemento = ""
 
-    return render(request, "pacientes.html", {"pacientes": pacientes, "opcion": opcion, "elemento": elemento})
+    return render(request, "pacientes.html", {"pacientes": pacientes, "opcion": opcion, "elemento": elemento, "modo": "pacientes"})
