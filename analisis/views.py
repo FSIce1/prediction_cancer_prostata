@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from .forms import AnalisisImagenForm
-from .models import AnalisisImagen, Paciente, Logs
+from .models import AnalisisImagen, UsuarioLogueo, Paciente, Logs
 from timeit import default_timer
 from django.core import serializers
 from django.db.models import Q
@@ -32,12 +32,19 @@ def create_user(request):
     
     try:
     
+        email = request.POST["email"];
+        password = request.POST["password"];
+            
+        # Registramos el usuario
+        usuario = UsuarioLogueo.objects.filter(email=email).exists();
+        
+        if not usuario:
+            usuario = UsuarioLogueo(email = email, password = password)
+            usuario.save()
+        
         if not firebase_admin._apps:
             firebase_sdk = credentials.Certificate('cancer_prostata/tesis-prostata-firebase-adminsdk-cjra8-fa2078f5be.json')
             firebase_admin.initialize_app(firebase_sdk)
-
-        email = request.POST["email"];
-        password = request.POST["password"];
 
         user = auth.create_user(email = email, password = password)
 
@@ -58,32 +65,46 @@ def inicio(request):
 
     try:
         
-        usuario_firebase = auth.get_user_by_email(email)
-    
-        # Obtener el UID del usuario
-        uid_usuario = usuario_firebase.uid
+        boolUser = UsuarioLogueo.objects.filter(email=email).exists();
 
-        uid = uid_usuario
-        usuario_firebase = auth.get_user(uid)
-        usuario_django = authenticate(request, uid=usuario_firebase.uid)
+        if boolUser:
 
-        if usuario_django is not None:
-            login(request, usuario_django)
+            usuario = UsuarioLogueo.objects.get(email=email)
+
+            if(usuario.password == password):
+            
+                usuario_firebase = auth.get_user_by_email(email)
+            
+                # Obtener el UID del usuario
+                uid_usuario = usuario_firebase.uid
+
+                uid = uid_usuario
+                usuario_firebase = auth.get_user(uid)
+                usuario_django = authenticate(request, uid=usuario_firebase.uid)
+
+                if usuario_django is not None:
+                    login(request, usuario_django)
+                
+                datos = {
+                    'uid': usuario_firebase.uid,
+                    'email': usuario_firebase.email,
+                }
+
+                usuario_firebase = auth.get_user(uid)
+                
+                request.session['dataUser'] = datos
+
+                form = AnalisisImagenForm()
+                return render(request, "analisis_imagen.html", {"form": form, "modo": "analisis", "email": usuario_firebase.email})
+            
+            else:
+
+                return render(request, "login.html", {"message": "La contraseña es incorrecta"})
         
-        datos_usuario = {
-            'uid': usuario_firebase.uid,
-            'email': usuario_firebase.email,
-        }
+        else:
 
-        usuario_firebase = auth.get_user(uid)
-        
-        request.session['dataUser'] = datos_usuario
-        # user = auth.get_user_by_email(email)
+            return render(request, "login.html", {"message": "El usuario no existe"})
 
-        # auth_user = auth.update_user(user.uid, password=password)
-        form = AnalisisImagenForm()
-        return render(request, "analisis_imagen.html", {"form": form, "modo": "analisis", "email": usuario_firebase.email})
-    
     except Exception as e:
 
         return render(request, "login.html", {"message": e})

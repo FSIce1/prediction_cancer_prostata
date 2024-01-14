@@ -14,6 +14,12 @@ class AnalisisImagen(models.Model):
     def __str__(self):
         return self.titulo
     
+class UsuarioLogueo(models.Model):
+    email = models.CharField(max_length=150, blank=False, null=False, default='')
+    password = models.CharField(max_length=150, blank=False, null=False, default='')
+    
+    def __str__(self):
+        return self.email
 class Paciente(models.Model):
     dni = models.CharField(max_length=8, blank=False, null=False, default='')
     nombres = models.CharField(max_length=150, blank=False, null=False, default='')
