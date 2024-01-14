@@ -5,12 +5,18 @@ Chart.defaults.global.defaultFontColor = "#858796";
 
 // Pie Chart Example
 var ctx = document.getElementById("myPieChart");
+
+if(label == "Sin Cáncer")
+    data = [dato, 100-dato];
+else
+    data = [100-dato, dato];
+
 var myPieChart = new Chart(ctx, {
     type: "doughnut",
     data: {
         labels: ["Sin Cáncer", "Con Cáncer"],
         datasets: [{
-            data: [95, 5],
+            data: data,
             backgroundColor: [
                 "rgba(0, 97, 242, 1)",
                 "rgba(255, 0, 0, 1)"

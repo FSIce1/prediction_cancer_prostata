@@ -20,4 +20,5 @@ y el api no funciona, consulto a la tabla 'pacientes'.
 14. Login con firebase
 12. Mejorar validaciones con swal
 11. Mejorar diseño
+16. Gráficos
 

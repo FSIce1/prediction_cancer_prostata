@@ -18,6 +18,8 @@
                             <h1 class="text-primary">Ingrese una imagen para la predicción!</h1>
                             <br>
                         
+                            IMAGEN
+                            {{email}}
                             <form action="{% url "resultado_imagen" %}" autocomplete="off" method="POST" enctype="multipart/form-data">
                               
                                 {% csrf_token %}

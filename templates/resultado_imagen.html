@@ -34,7 +34,8 @@
                                             </div>
                                         
                                             <canvas id="myPieChart" width="639" height="240" style="display: block; width: 639px; height: 240px;" class="chartjs-render-monitor"></canvas>
-                                        
+                                            <input id="valuePrediction" type="hidden">
+
                                         </div>
                                     </div>
                                 </div>
@@ -69,9 +70,11 @@
                                         Descripción: {{analisis.descripcion}} </br></br>
                                         Nombre de la imagen: {{analisis.imagen}}</br>
                                         Tiempo de análisis: {{tiempoTotal}} segundos</br>
-                                        Predicción: {{prediccion}}</br>
+                                        {% comment %} Predicción: {{prediccion}}</br> {% endcomment %}
+                                        Resultado Final: {{label}}</br>
+                                        Porcentaje: {{prediction}}</br>
+                                        {% comment %} Results: {{results}}</br> {% endcomment %}
                                         {% comment %} Porcentaje con cáncer: 5%</br>
-                                        Porcentaje sin cáncer: 95%</br>
                                         Predicción: El paciente no tiene cáncer de próstata</br> {% endcomment %}
                                     </div>
                                     <br>

@@ -4,6 +4,7 @@ from .models import AnalisisImagen, Paciente, Logs
 from timeit import default_timer
 from django.core import serializers
 from django.db.models import Q
+from decimal import Decimal, getcontext
 
 # Firebase
 import firebase_admin
@@ -58,7 +59,6 @@ def inicio(request):
         user = auth.get_user_by_email(email)
 
         auth_user = auth.update_user(user.uid, password=password)
-
         form = AnalisisImagenForm()
         return render(request, "analisis_imagen.html", {"form": form, "modo": "analisis"})
     
@@ -172,6 +172,8 @@ def resultado_imagen(request):
         tiempoTotal = round(tiempoEstimado, 4)
         
         prediction = prediccion.get("ConCancer")
+
+        results = logicLabel(prediction)
         
         # Guardamos los datos del resultado
         p = AnalisisImagen.objects.get(id=analisis.id)
@@ -188,7 +190,17 @@ def resultado_imagen(request):
 
         log.save()
 
-    return render(request, "resultado_imagen.html", {"analisis": analisis, "tiempoTotal": tiempoTotal, "prediccion": prediction})
+    return render(request, "resultado_imagen.html", {"analisis": analisis, "modo": "analisis", "tiempoTotal": tiempoTotal, "prediccion": prediction, "results": results, "label": results["label"], "prediction": results["prediction"]})
+
+def logicLabel(prediction):
+
+    prediction = float(prediction) * float(100);
+
+    if(prediction > 80):
+        return {"label": "Sin Cáncer", "prediction": prediction}
+    else:
+        factor_multiplicacion = Decimal(100) - Decimal(prediction)
+        return {"label": "Con Cáncer", "prediction": factor_multiplicacion}
 
 def realizar_analisis(url_imagen = ""):
     
@@ -211,7 +223,6 @@ def realizar_analisis(url_imagen = ""):
         loaded_model = tf.keras.models.load_model(MODEL_FILE)
         loaded_model.summary()
 
-        # image_file = "files/imagenes/pruebas/imagen_de_prueba.jpg"
         image_file = "files/imagenes/"+url_imagen
 
         n_top = 2
