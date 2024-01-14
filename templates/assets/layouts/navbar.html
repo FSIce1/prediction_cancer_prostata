@@ -1,5 +1,6 @@
 <nav class="topnav navbar navbar-expand shadow justify-content-between justify-content-sm-start navbar-light bg-white" id="sidenavAccordion">
       
+    {% load static %}
     <!-- Sidenav Toggle Button-->
     <button class="btn btn-icon btn-transparent-dark order-1 order-lg-0 me-2 ms-lg-2 me-lg-0" id="sidebarToggle">
       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-menu">
@@ -14,7 +15,7 @@
     <!-- Navbar Items-->
     <ul class="navbar-nav align-items-center ms-auto">
       
-      <!-- Alerts Dropdown-->
+      <!--
       <li class="nav-item dropdown no-caret d-none d-sm-block me-3 dropdown-notifications">
         <a
           class="btn btn-icon btn-transparent-dark dropdown-toggle"
@@ -61,7 +62,7 @@
             </svg>
             Alerts Center
           </h6>
-          <!-- Example Alert 1-->
+
           <a
             class="dropdown-item dropdown-notifications-item"
             href="https://sb-admin-pro.startbootstrap.com/dashboard-1.html#!"
@@ -92,7 +93,7 @@
               </div>
             </div>
           </a>
-          <!-- Example Alert 2-->
+
           <a
             class="dropdown-item dropdown-notifications-item"
             href="https://sb-admin-pro.startbootstrap.com/dashboard-1.html#!"
@@ -124,7 +125,7 @@
               </div>
             </div>
           </a>
-          <!-- Example Alert 3-->
+
           <a
             class="dropdown-item dropdown-notifications-item"
             href="https://sb-admin-pro.startbootstrap.com/dashboard-1.html#!"
@@ -145,7 +146,7 @@
                   fill="currentColor"
                   d="M256 32c14.2 0 27.3 7.5 34.5 19.8l216 368c7.3 12.4 7.3 27.7 .2 40.1S486.3 480 472 480H40c-14.3 0-27.6-7.7-34.7-20.1s-7-27.8 .2-40.1l216-368C228.7 39.5 241.8 32 256 32zm0 128c-13.3 0-24 10.7-24 24V296c0 13.3 10.7 24 24 24s24-10.7 24-24V184c0-13.3-10.7-24-24-24zm32 224a32 32 0 1 0 -64 0 32 32 0 1 0 64 0z"
                 ></path></svg
-              ><!-- <i class="fas fa-exclamation-triangle"></i> Font Awesome fontawesome.com -->
+              >
             </div>
             <div class="dropdown-notifications-item-content">
               <div class="dropdown-notifications-item-content-details">
@@ -156,7 +157,7 @@
               </div>
             </div>
           </a>
-          <!-- Example Alert 4-->
+
           <a
             class="dropdown-item dropdown-notifications-item"
             href="https://sb-admin-pro.startbootstrap.com/dashboard-1.html#!"
@@ -198,7 +199,6 @@
         </div>
       </li>
       
-      <!-- Messages Dropdown-->
       <li class="nav-item dropdown no-caret d-none d-sm-block me-3 dropdown-notifications">
         <a
           class="btn btn-icon btn-transparent-dark dropdown-toggle"
@@ -249,7 +249,7 @@
             </svg>
             Message Center
           </h6>
-          <!-- Example Message 1  -->
+
           <a
             class="dropdown-item dropdown-notifications-item"
             href="https://sb-admin-pro.startbootstrap.com/dashboard-1.html#!"
@@ -274,7 +274,7 @@
               </div>
             </div>
           </a>
-          <!-- Example Message 2-->
+
           <a
             class="dropdown-item dropdown-notifications-item"
             href="https://sb-admin-pro.startbootstrap.com/dashboard-1.html#!"
@@ -299,7 +299,7 @@
               </div>
             </div>
           </a>
-          <!-- Example Message 3-->
+
           <a
             class="dropdown-item dropdown-notifications-item"
             href="https://sb-admin-pro.startbootstrap.com/dashboard-1.html#!"
@@ -324,7 +324,7 @@
               </div>
             </div>
           </a>
-          <!-- Example Message 4-->
+
           <a
             class="dropdown-item dropdown-notifications-item"
             href="https://sb-admin-pro.startbootstrap.com/dashboard-1.html#!"
@@ -349,7 +349,7 @@
               </div>
             </div>
           </a>
-          <!-- Footer Link-->
+
           <a
             class="dropdown-item dropdown-notifications-footer"
             href="https://sb-admin-pro.startbootstrap.com/dashboard-1.html#!"
@@ -357,29 +357,21 @@
           >
         </div>
       </li>
+      -->
 
       <!-- User Dropdown-->
       <li class="nav-item dropdown no-caret dropdown-user me-3 me-lg-4">
-        <a class="btn btn-icon btn-transparent-dark dropdown-toggle" id="navbarDropdownUserImage" href="javascript:void(0);" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img class="img-fluid" src="./Dashboard - SB Admin Pro_files/profile-1.png"/></a>
+        <a class="btn btn-icon btn-transparent-dark dropdown-toggle" id="navbarDropdownUserImage" href="javascript:void(0);" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img class="img-fluid" src="{% static 'img/icons/user.png' %}" /></a>
         <div class="dropdown-menu dropdown-menu-end border-0 shadow animated--fade-in-up" aria-labelledby="navbarDropdownUserImage">
           <h6 class="dropdown-header d-flex align-items-center">
-            <img class="dropdown-user-img" src="./Dashboard - SB Admin Pro_files/profile-1.png"/>
+            {% comment %} <img class="dropdown-user-img" src="./Dashboard - SB Admin Pro_files/profile-1.png"/> {% endcomment %}
             <div class="dropdown-user-details">
-              <div class="dropdown-user-details-name">Luis Felipe</div>
-              <div class="dropdown-user-details-email">luisfelipesiesquen22@gmail.com</div>
+              {% comment %} <div class="dropdown-user-details-name">Luis Felipe</div> {% endcomment %}
+              <div class="dropdown-user-details-email">{{email}}</div>
             </div>
           </h6>
           <div class="dropdown-divider"></div>
-          <a class="dropdown-item" href="https://sb-admin-pro.startbootstrap.com/dashboard-1.html#!">
-            <div class="dropdown-item-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-settings">
-                <circle cx="12" cy="12" r="3"></circle>
-                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
-              </svg>
-            </div>
-            Account
-          </a>
-          <a class="dropdown-item" href="https://sb-admin-pro.startbootstrap.com/dashboard-1.html#!">
+          <a class="dropdown-item" href="{% url 'cerrar_sesion' %}">
             <div class="dropdown-item-icon">
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-log-out">
                 <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
@@ -387,7 +379,7 @@
                 <line x1="21" y1="12" x2="9" y2="12"></line>
               </svg>
             </div>
-            Logout
+            Cerrar Sesión
           </a>
         </div>
       </li>

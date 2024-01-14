@@ -21,4 +21,4 @@ y el api no funciona, consulto a la tabla 'pacientes'.
 12. Mejorar validaciones con swal
 11. Mejorar diseño
 16. Gráficos
-
+17. Datos se sesión

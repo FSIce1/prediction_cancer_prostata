@@ -1,10 +1,11 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .forms import AnalisisImagenForm
 from .models import AnalisisImagen, Paciente, Logs
 from timeit import default_timer
 from django.core import serializers
 from django.db.models import Q
 from decimal import Decimal, getcontext
+from django.contrib.auth import authenticate, login
 
 # Firebase
 import firebase_admin
@@ -56,20 +57,52 @@ def inicio(request):
     password = request.POST["password"];
 
     try:
-        user = auth.get_user_by_email(email)
+        
+        usuario_firebase = auth.get_user_by_email(email)
+    
+        # Obtener el UID del usuario
+        uid_usuario = usuario_firebase.uid
 
-        auth_user = auth.update_user(user.uid, password=password)
+        uid = uid_usuario
+        usuario_firebase = auth.get_user(uid)
+        usuario_django = authenticate(request, uid=usuario_firebase.uid)
+
+        if usuario_django is not None:
+            login(request, usuario_django)
+        
+        datos_usuario = {
+            'uid': usuario_firebase.uid,
+            'email': usuario_firebase.email,
+        }
+
+        usuario_firebase = auth.get_user(uid)
+        
+        request.session['dataUser'] = datos_usuario
+        # user = auth.get_user_by_email(email)
+
+        # auth_user = auth.update_user(user.uid, password=password)
         form = AnalisisImagenForm()
-        return render(request, "analisis_imagen.html", {"form": form, "modo": "analisis"})
+        return render(request, "analisis_imagen.html", {"form": form, "modo": "analisis", "email": usuario_firebase.email})
     
     except Exception as e:
 
         return render(request, "login.html", {"message": e})
-    
+
 def analisis_imagen(request):
 
+    dataUser = request.session.get('dataUser', None)
+
     form = AnalisisImagenForm()
-    return render(request, "analisis_imagen.html", {"form": form, "modo": "analisis"})    
+    return render(request, "analisis_imagen.html", {"form": form, "modo": "analisis", "email": dataUser["email"]})    
+    
+def cerrar_sesion(request):
+
+    dataUser = request.session.get('dataUser', None)
+
+    user_id = dataUser["uid"]
+    auth.revoke_refresh_tokens(user_id)
+    
+    return render(request, 'login.html')
 
 @csrf_exempt
 def buscar_por_dni(request):
@@ -181,6 +214,8 @@ def resultado_imagen(request):
         p.tiempo = tiempoTotal
         p.save()
         
+        dataUser = request.session.get('dataUser', None)
+
     except:
 
         log = Logs(
@@ -190,7 +225,7 @@ def resultado_imagen(request):
 
         log.save()
 
-    return render(request, "resultado_imagen.html", {"analisis": analisis, "modo": "analisis", "tiempoTotal": tiempoTotal, "prediccion": prediction, "results": results, "label": results["label"], "prediction": results["prediction"]})
+    return render(request, "resultado_imagen.html", {"analisis": analisis, "modo": "analisis", "tiempoTotal": tiempoTotal, "prediccion": prediction, "results": results, "label": results["label"], "prediction": results["prediction"], "email": dataUser["email"]})
 
 def logicLabel(prediction):
 
@@ -276,7 +311,9 @@ def historial_analisis(request):
     if(not elemento):
        elemento = ""
 
-    return render(request, "historial_analisis.html", {"analisis": analisis, "opcion": opcion, "elemento": elemento, "modo": "historial"})
+    dataUser = request.session.get('dataUser', None)
+       
+    return render(request, "historial_analisis.html", {"analisis": analisis, "opcion": opcion, "elemento": elemento, "modo": "historial", "email": dataUser["email"]})
 
 def pacientes(request):
     
@@ -307,4 +344,6 @@ def pacientes(request):
     if(not elemento):
        elemento = ""
 
-    return render(request, "pacientes.html", {"pacientes": pacientes, "opcion": opcion, "elemento": elemento, "modo": "pacientes"})
+    dataUser = request.session.get('dataUser', None)
+
+    return render(request, "pacientes.html", {"pacientes": pacientes, "opcion": opcion, "elemento": elemento, "modo": "pacientes", "email": dataUser["email"]})
