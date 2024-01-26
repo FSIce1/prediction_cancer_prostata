@@ -1,8 +1,4 @@
 
-6. Pdf del resultado
-7. Correo del resultado**
-
-
 =========
 RESUELTAS
 =========
@@ -23,3 +19,4 @@ y el api no funciona, consulto a la tabla 'pacientes'.
 13. Logueo (crear tablas de usuario)
 15. Hallazgo -> Logueo contraseña
 3. Normalizar tablas
+6. Pdf del resultado

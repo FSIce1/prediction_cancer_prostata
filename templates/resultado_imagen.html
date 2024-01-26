@@ -70,12 +70,8 @@
                                         Descripción: {{analisis.descripcion}} </br></br>
                                         Nombre de la imagen: {{analisis.imagen}}</br>
                                         Tiempo de análisis: {{tiempoTotal}} segundos</br>
-                                        {% comment %} Predicción: {{prediccion}}</br> {% endcomment %}
                                         Resultado Final: {{label}}</br>
                                         Porcentaje: {{prediction}}</br>
-                                        {% comment %} Results: {{results}}</br> {% endcomment %}
-                                        {% comment %} Porcentaje con cáncer: 5%</br>
-                                        Predicción: El paciente no tiene cáncer de próstata</br> {% endcomment %}
                                     </div>
                                     <br>
 
@@ -84,6 +80,18 @@
                                         <img src="{{ analisis.imagen.url }}" width="150px" height="120px"/>
                                     </div>
                                 </div>
+
+                                <br>
+                                <form id="pdfForm" action="{% url "generate_pdf" %}" autocomplete="off" method="POST">
+                                    
+                                    {% csrf_token %}
+
+                                    <input id="id" name="id" type="hidden" value="{{ id }}">
+                                    <button style="background-color: #92CBC5; border-color: #92CBC5; color: black" class="btn btn-success" type="submit">PDF</button>
+
+                                    {% comment %} <a class="nav-link" href="{% url 'generate_pdf' %}">PDF</a> {% endcomment %}
+
+                                </form>
 
                             </div>
                         </div>

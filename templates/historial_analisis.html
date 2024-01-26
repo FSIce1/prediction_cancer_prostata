@@ -52,7 +52,9 @@
                                   <th scope="col">A. Materno</th>
                                   <th scope="col">A. Paterno</th>
                                   <th scope="col">Resultado</th>
+                                  <th scope="col">Porcentaje</th>
                                   <th scope="col">Tiempo</th>
+                                  <th scope="col">Acciones</th>
                                 </tr>
                               </thead>
                               <tbody>
@@ -64,8 +66,18 @@
                                       <td>{{item.nombres}}</td>
                                       <td>{{item.apellidoMaterno}}</td>
                                       <td>{{item.apellidoPaterno}}</td>
-                                      <td>{{item.resultado}}</td>
-                                      <td>{{item.tiempo}}</td>
+                                      <td>{{item.modo}}</td>
+                                      <td>{{item.prediccion}}</td>
+                                      <td>{{item.tiempo}} seg</td>
+                                      <td>
+                                        
+                                        <form action="{% url "generate_pdf" %}" autocomplete="off" method="POST">
+                                          {% csrf_token %}
+                                          <input id="id" name="id" type="hidden" value="{{ item.id }}">
+                                          <button style="background-color: #92CBC5; border-color: #92CBC5; color: black" class="btn btn-success" type="submit">PDF</button>
+                                        </form>
+
+                                      </td>
                                     </tr>
                                   {% endfor %}
                                 {% else %}

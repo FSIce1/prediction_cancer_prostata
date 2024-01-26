@@ -12,4 +12,5 @@ urlpatterns = [
     path('resultado_imagen/', views.resultado_imagen, name="resultado_imagen"),
     path('historial_analisis/', views.historial_analisis, name="historial_analisis"),
     path('pacientes/', views.pacientes, name="pacientes"),
+    path('generate_pdf/', views.generate_pdf, name="generate_pdf"),
 ]

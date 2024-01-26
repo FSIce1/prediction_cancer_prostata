@@ -24,6 +24,12 @@ from django.http import JsonResponse
 import requests
 from django.views.decorators.csrf import csrf_exempt
 
+from django.http import HttpResponse
+from reportlab.pdfgen import canvas
+from reportlab.lib.colors import Color
+from reportlab.lib.pagesizes import letter
+import textwrap
+
 url = "https://api.apis.net.pe/v1/dni?numero="
 
 # Funciones
@@ -233,6 +239,8 @@ def resultado_imagen(request):
         p = AnalisisImagen.objects.get(id=analisis.id)
         p.resultado = prediction
         p.tiempo = tiempoTotal
+        p.modo = results["label"]
+        p.prediccion = results["prediction"]
         p.save()
         
         dataUser = request.session.get('dataUser', None)
@@ -246,7 +254,7 @@ def resultado_imagen(request):
 
         log.save()
 
-    return render(request, "resultado_imagen.html", {"analisis": analisis, "modo": "analisis", "tiempoTotal": tiempoTotal, "prediccion": prediction, "results": results, "label": results["label"], "prediction": results["prediction"], "email": dataUser["email"]})
+    return render(request, "resultado_imagen.html", {"analisis": analisis, "modo": "analisis", "tiempoTotal": tiempoTotal, "prediccion": prediction, "results": results, "label": results["label"], "prediction": results["prediction"], "email": dataUser["email"], "id": p.id})
 
 def logicLabel(prediction):
 
@@ -368,3 +376,152 @@ def pacientes(request):
     dataUser = request.session.get('dataUser', None)
 
     return render(request, "pacientes.html", {"pacientes": pacientes, "opcion": opcion, "elemento": elemento, "modo": "pacientes", "email": dataUser["email"]})
+
+def generate_pdf(request):
+
+    identificador = request.POST["id"] 
+    analisis = AnalisisImagen.objects.filter(id=identificador).exists();
+
+    if analisis:
+
+        analisis = AnalisisImagen.objects.get(id=identificador)
+    
+        # Crea un objeto PDF
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = 'filename="reporte_final.pdf"; inline'
+
+        pdf = canvas.Canvas(response, pagesize=letter)
+
+        # text_color = Color(0.8, 0.8, 0.8)  # Gris claro
+
+        # TÍTULO
+        title = "REPORTE FINAL"
+        width, height = letter
+
+        text_width = pdf.stringWidth(title, "Helvetica-Bold", 16)
+        x = (width - text_width) / 2
+        y = 750
+        
+        pdf.setFont("Helvetica-Bold", 12)
+        pdf.drawString(x, y, title)
+
+        x = 100
+        y-=50
+        # TODO: INFORMACIÓN DEL PACIENTE
+        pdf.setFillColorRGB(0, 0, 1)
+        pdf.setFont("Helvetica-Bold", 14)
+        pdf.drawString(x, y, 'Información del paciente')
+        pdf.setFillColorRGB(0, 0, 0)
+        
+        # DNI
+        y-=30
+        pdf.setFont("Helvetica-Bold", 12)
+        pdf.drawString(x, y, "DNI:")
+        y-=15
+        pdf.setFont("Helvetica", 12)
+        pdf.drawString(x, y, analisis.dni)
+
+        # NOMBRES
+        y-=30
+        pdf.setFont("Helvetica-Bold", 12)
+        pdf.drawString(x, y, "Nombres:")
+        y-=15
+        pdf.setFont("Helvetica", 12)
+        pdf.drawString(x, y, analisis.nombres)
+
+        # APELLIDO PATERNO
+        y-=30
+        pdf.setFont("Helvetica-Bold", 12)
+        pdf.drawString(x, y, "Apellido Paterno:")
+        y-=15
+        pdf.setFont("Helvetica", 12)
+        pdf.drawString(x, y, analisis.apellidoPaterno)
+
+        # APELLIDO MATERNO
+        y-=30
+        pdf.setFont("Helvetica-Bold", 12)
+        pdf.drawString(x, y, "Apellido Materno:")
+        y-=15
+        pdf.setFont("Helvetica", 12)
+        pdf.drawString(x, y, analisis.apellidoMaterno)
+
+
+        # TODO: INFORMACIÓN DEL RESULTADO
+        y-=40
+        pdf.setFillColorRGB(0, 0, 1)
+        pdf.setFont("Helvetica-Bold", 14)
+        pdf.drawString(x, y, 'Información del resultado')
+        pdf.setFillColorRGB(0, 0, 0)
+        
+        # TÍTULO
+        y-=30
+        pdf.setFont("Helvetica-Bold", 12)
+        pdf.drawString(x, y, "Título:")
+        y-=15
+        pdf.setFont("Helvetica", 12)
+        pdf.drawString(x, y, analisis.titulo)
+
+        # DESCRIPCIÓN
+        y-=30
+        description = analisis.descripcion; #"kasdjskajdoikasjdkjaskodjaskdjsakdhkasghdjasgdasgvdjasgjdgasjdgashjdgasjhdgsajhgdjashgdjashgdasjhgdasjdgasjhdgasjdgasjdgasjgdasjhdgasjgdasjgdasjhdgasjhdgasjdgasjdgsajhdgasjdhgasjdhasgdjhsagdjhsagdhjasgewqyueuisgaydasjdbashgdfsahjdbsadhrte cvendfidosfjdsnfsdbf lñsdiusñfdsn´sdfklsdjnfká"
+        long_description = 80
+        pdf.setFont("Helvetica-Bold", 12)
+        pdf.drawString(x, y, analisis.descripcion)
+        pdf.setFont("Helvetica", 12)
+        y-=15
+        parts = textwrap.wrap(description, long_description)
+        for part in parts:
+            pdf.drawString(x, y, part)
+            y -= 15
+
+        
+        # TODO: RESUMEN FINAL
+        y-=30
+        pdf.setFillColorRGB(0, 0, 1)
+        pdf.setFont("Helvetica-Bold", 14)
+        pdf.drawString(x, y, 'Resumen Final')
+        pdf.setFillColorRGB(0, 0, 0)
+
+        y-=150
+        image_path = "files/"+str(analisis.imagen) 
+        pdf.drawImage(image_path, ((width - 130) / 2), y, width=130, height=130)
+        
+        # Tiempo de análisis
+        y-=30
+        pdf.setFont("Helvetica-Bold", 12)
+        pdf.drawString(x, y, "Tiempo de análisis:")
+        y-=15
+        pdf.setFont("Helvetica", 12)
+        pdf.drawString(x, y, analisis.tiempo + " seg")
+
+        # Resultado final
+        y-=30
+        pdf.setFont("Helvetica-Bold", 12)
+        pdf.drawString(x, y, "Resultado Final:")
+        y-=15
+        pdf.setFont("Helvetica", 12)
+        pdf.drawString(x, y, analisis.modo)
+
+        # Porcentaje
+        y-=30
+        pdf.setFont("Helvetica-Bold", 12)
+        pdf.drawString(x, y, "Porcentaje:")
+        y-=15
+        pdf.setFont("Helvetica", 12)
+        pdf.drawString(x, y, analisis.prediccion)
+
+        y-=30
+        pdf.line(100, y, 700, y)
+
+        pdf.showPage()
+        pdf.save()
+
+        return response
+    
+    else:
+
+        dataUser = request.session.get('dataUser', None)
+
+        form = AnalisisImagenForm()
+
+        return render(request, "analisis_imagen.html", {"form": form, "modo": "analisis", "email": dataUser["email"]})    

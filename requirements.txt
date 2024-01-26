@@ -7,4 +7,5 @@ tensorflow
 Pillow
 matplotlib
 pyrebase4
-
+reportlab
+WeasyPrint

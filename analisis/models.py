@@ -10,6 +10,8 @@ class AnalisisImagen(models.Model):
     imagen = models.ImageField(upload_to="imagenes", null=True)
     resultado = models.CharField(max_length=150, blank=False, null=True, default='')
     tiempo = models.CharField(max_length=150, blank=False, null=True, default='')
+    modo = models.CharField(max_length=150, blank=False, null=False, default='')
+    prediccion = models.CharField(max_length=150, blank=False, null=False, default='')
 
     def __str__(self):
         return self.titulo
