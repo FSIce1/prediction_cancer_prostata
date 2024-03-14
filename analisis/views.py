@@ -29,6 +29,7 @@ from reportlab.pdfgen import canvas
 from reportlab.lib.colors import Color
 from reportlab.lib.pagesizes import letter
 import textwrap
+import os
 
 url = "https://api.apis.net.pe/v1/dni?numero="
 
@@ -378,150 +379,71 @@ def pacientes(request):
     return render(request, "pacientes.html", {"pacientes": pacientes, "opcion": opcion, "elemento": elemento, "modo": "pacientes", "email": dataUser["email"]})
 
 def generate_pdf(request):
+    identificador = request.POST.get("id")
 
-    identificador = request.POST["id"] 
-    analisis = AnalisisImagen.objects.filter(id=identificador).exists();
-
-    if analisis:
-
+    try:
         analisis = AnalisisImagen.objects.get(id=identificador)
-    
-        # Crea un objeto PDF
-        response = HttpResponse(content_type='application/pdf')
-        response['Content-Disposition'] = 'filename="reporte_final.pdf"; inline'
-
-        pdf = canvas.Canvas(response, pagesize=letter)
-
-        # text_color = Color(0.8, 0.8, 0.8)  # Gris claro
-
-        # TÍTULO
-        title = "REPORTE FINAL"
-        width, height = letter
-
-        text_width = pdf.stringWidth(title, "Helvetica-Bold", 16)
-        x = (width - text_width) / 2
-        y = 750
-        
-        pdf.setFont("Helvetica-Bold", 12)
-        pdf.drawString(x, y, title)
-
-        x = 100
-        y-=50
-        # TODO: INFORMACIÓN DEL PACIENTE
-        pdf.setFillColorRGB(0, 0, 1)
-        pdf.setFont("Helvetica-Bold", 14)
-        pdf.drawString(x, y, 'Información del paciente')
-        pdf.setFillColorRGB(0, 0, 0)
-        
-        # DNI
-        y-=30
-        pdf.setFont("Helvetica-Bold", 12)
-        pdf.drawString(x, y, "DNI:")
-        y-=15
-        pdf.setFont("Helvetica", 12)
-        pdf.drawString(x, y, analisis.dni)
-
-        # NOMBRES
-        y-=30
-        pdf.setFont("Helvetica-Bold", 12)
-        pdf.drawString(x, y, "Nombres:")
-        y-=15
-        pdf.setFont("Helvetica", 12)
-        pdf.drawString(x, y, analisis.nombres)
-
-        # APELLIDO PATERNO
-        y-=30
-        pdf.setFont("Helvetica-Bold", 12)
-        pdf.drawString(x, y, "Apellido Paterno:")
-        y-=15
-        pdf.setFont("Helvetica", 12)
-        pdf.drawString(x, y, analisis.apellidoPaterno)
-
-        # APELLIDO MATERNO
-        y-=30
-        pdf.setFont("Helvetica-Bold", 12)
-        pdf.drawString(x, y, "Apellido Materno:")
-        y-=15
-        pdf.setFont("Helvetica", 12)
-        pdf.drawString(x, y, analisis.apellidoMaterno)
-
-
-        # TODO: INFORMACIÓN DEL RESULTADO
-        y-=40
-        pdf.setFillColorRGB(0, 0, 1)
-        pdf.setFont("Helvetica-Bold", 14)
-        pdf.drawString(x, y, 'Información del resultado')
-        pdf.setFillColorRGB(0, 0, 0)
-        
-        # TÍTULO
-        y-=30
-        pdf.setFont("Helvetica-Bold", 12)
-        pdf.drawString(x, y, "Título:")
-        y-=15
-        pdf.setFont("Helvetica", 12)
-        pdf.drawString(x, y, analisis.titulo)
-
-        # DESCRIPCIÓN
-        y-=30
-        description = analisis.descripcion; #"kasdjskajdoikasjdkjaskodjaskdjsakdhkasghdjasgdasgvdjasgjdgasjdgashjdgasjhdgsajhgdjashgdjashgdasjhgdasjdgasjhdgasjdgasjdgasjgdasjhdgasjgdasjgdasjhdgasjhdgasjdgasjdgsajhdgasjdhgasjdhasgdjhsagdjhsagdhjasgewqyueuisgaydasjdbashgdfsahjdbsadhrte cvendfidosfjdsnfsdbf lñsdiusñfdsn´sdfklsdjnfká"
-        long_description = 80
-        pdf.setFont("Helvetica-Bold", 12)
-        pdf.drawString(x, y, analisis.descripcion)
-        pdf.setFont("Helvetica", 12)
-        y-=15
-        parts = textwrap.wrap(description, long_description)
-        for part in parts:
-            pdf.drawString(x, y, part)
-            y -= 15
-
-        
-        # TODO: RESUMEN FINAL
-        y-=30
-        pdf.setFillColorRGB(0, 0, 1)
-        pdf.setFont("Helvetica-Bold", 14)
-        pdf.drawString(x, y, 'Resumen Final')
-        pdf.setFillColorRGB(0, 0, 0)
-
-        y-=150
-        image_path = "files/"+str(analisis.imagen) 
-        pdf.drawImage(image_path, ((width - 130) / 2), y, width=130, height=130)
-        
-        # Tiempo de análisis
-        y-=30
-        pdf.setFont("Helvetica-Bold", 12)
-        pdf.drawString(x, y, "Tiempo de análisis:")
-        y-=15
-        pdf.setFont("Helvetica", 12)
-        pdf.drawString(x, y, analisis.tiempo + " seg")
-
-        # Resultado final
-        y-=30
-        pdf.setFont("Helvetica-Bold", 12)
-        pdf.drawString(x, y, "Resultado Final:")
-        y-=15
-        pdf.setFont("Helvetica", 12)
-        pdf.drawString(x, y, analisis.modo)
-
-        # Porcentaje
-        y-=30
-        pdf.setFont("Helvetica-Bold", 12)
-        pdf.drawString(x, y, "Porcentaje:")
-        y-=15
-        pdf.setFont("Helvetica", 12)
-        pdf.drawString(x, y, analisis.prediccion)
-
-        y-=30
-        pdf.line(100, y, 700, y)
-
-        pdf.showPage()
-        pdf.save()
-
-        return response
-    
-    else:
-
+    except AnalisisImagen.DoesNotExist:
         dataUser = request.session.get('dataUser', None)
-
         form = AnalisisImagenForm()
+        return render(request, "analisis_imagen.html", {"form": form, "modo": "analisis", "email": dataUser["email"]})
 
-        return render(request, "analisis_imagen.html", {"form": form, "modo": "analisis", "email": dataUser["email"]})    
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'filename="reporte_final.pdf"'
+
+    pdf = canvas.Canvas(response, pagesize=letter)
+
+    # Configuración de estilos
+    titulo_estilo = ("Helvetica-Bold", 18)
+    subtitulo_estilo = ("Helvetica-Bold", 14)
+    texto_estilo = ("Helvetica", 12)
+    color_titulo = (0, 0, 0)  # Negro
+    color_subtitulo = (0, 0, 1)  # Azul
+    color_texto = (0, 0, 0)  # Negro
+
+    # TÍTULO
+    pdf.setFont(*titulo_estilo)
+    pdf.setFillColorRGB(*color_titulo)
+    titulo = "REPORTE FINAL"
+    titulo_ancho = pdf.stringWidth(titulo, *titulo_estilo)
+    pdf.drawString((letter[0] - titulo_ancho) / 2, 750, titulo)
+
+    # Información del paciente
+    pdf.setFont(*subtitulo_estilo)
+    pdf.setFillColorRGB(*color_subtitulo)
+    pdf.drawString(100, 700, 'Información del paciente')
+
+    pdf.setFont(*texto_estilo)
+    pdf.setFillColorRGB(*color_texto)
+    pdf.drawString(100, 680, f"DNI: {analisis.dni}")
+    pdf.drawString(100, 660, f"Nombres: {analisis.nombres}")
+    pdf.drawString(100, 640, f"Apellido Paterno: {analisis.apellidoPaterno}")
+    pdf.drawString(100, 620, f"Apellido Materno: {analisis.apellidoMaterno}")
+
+    # Información del resultado
+    pdf.setFont(*subtitulo_estilo)
+    pdf.setFillColorRGB(*color_subtitulo)
+    pdf.drawString(100, 580, 'Información del resultado')
+
+    pdf.setFont(*texto_estilo)
+    pdf.setFillColorRGB(*color_texto)
+    pdf.drawString(100, 560, f"Título: {analisis.titulo}")
+    pdf.drawString(100, 540, f"Descripción: {analisis.descripcion}")
+
+    # Resumen final
+    pdf.setFont(*subtitulo_estilo)
+    pdf.setFillColorRGB(*color_subtitulo)
+    pdf.drawString(100, 500, 'Resumen Final')
+
+    pdf.setFont(*texto_estilo)
+    pdf.setFillColorRGB(*color_texto)
+    pdf.drawString(100, 480, f"Tiempo de análisis: {analisis.tiempo} seg")
+    pdf.drawString(100, 460, f"Resultado Final: {analisis.modo}")
+    pdf.drawString(100, 440, f"Porcentaje: {round(float(analisis.prediccion), 3)}")
+
+    # Insertar imagen
+    image_path = os.path.join("files", str(analisis.imagen))
+    pdf.drawImage(image_path, 250, 250, width=130, height=130)
+
+    pdf.save()
+    return response
