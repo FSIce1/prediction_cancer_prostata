@@ -67,14 +67,16 @@
                                       <td>{{item.apellidoMaterno}}</td>
                                       <td>{{item.apellidoPaterno}}</td>
                                       <td>{{item.modo}}</td>
-                                      <td>{{item.prediccion}}</td>
+                                      <td>{{item.prediccion|floatformat:"3"}} %</td>
                                       <td>{{item.tiempo}} seg</td>
                                       <td>
                                         
-                                        <form action="{% url "generate_pdf" %}" autocomplete="off" method="POST">
+                                        <form id="myForm" action="{% url "generate_pdf" %}" autocomplete="off" method="POST" target="_blank">
                                           {% csrf_token %}
                                           <input id="id" name="id" type="hidden" value="{{ item.id }}">
-                                          <button style="background-color: #92CBC5; border-color: #92CBC5; color: black" class="btn btn-success" type="submit">PDF</button>
+                                          <button style="background-color: #92CBC5; border-color: #92CBC5; height: 30px; color: black" class="btn btn-success" type="button" onclick="submitFormAndOpenNewTab()">
+                                            <i class="far fa-file-pdf"></i>
+                                          </button>
                                         </form>
 
                                       </td>

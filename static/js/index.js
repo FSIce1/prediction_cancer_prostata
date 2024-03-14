@@ -123,3 +123,9 @@ window.addEventListener("keydown", (event) => {
         buscar_por_dni(dni);
     }
 })
+
+function submitFormAndOpenNewTab() {
+    var form = document.getElementById('myForm');
+    form.submit();
+    window.open('', '_blank');
+}
