@@ -277,7 +277,7 @@ def realizar_analisis(url_imagen = ""):
 
         # PARTE 1
         BREED_FILE = "analisis/utils/breeds.txt"
-        MODEL_FILE = "analisis/models/modelo_vgg16_512px.h5"
+        MODEL_FILE = "analisis/models/modelo_vgg19.h5"
         IMG_SIZE = 512
 
         labels = []
