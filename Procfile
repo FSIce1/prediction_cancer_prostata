@@ -1,1 +1,1 @@
-web: gunicorn cancer_prostata.wsgi
+web: gunicorn cancer_prostata.wsgi --log-file -
