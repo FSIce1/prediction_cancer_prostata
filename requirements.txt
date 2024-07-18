@@ -9,3 +9,9 @@ matplotlib
 pyrebase4
 reportlab
 WeasyPrint
+
+dj-database-url
+django
+django-heroku
+gunicorn
+whitenoise
